@@ -7,13 +7,30 @@ if (module.hot) {
 }
 
 class App extends React.Component {
-  render() {
-    window.navigator.geolocation.getCurrentPosition(
-      (position) => console.log(position),
-      (err) => console.error(err)
-    );
+  constructor(props) {
+    super(props);
 
-    return <div> Hi there!</div>;
+    this.state = { lat: null, errorMessage: "" };
+
+    window.navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // To update state call setState
+        this.setState({ lat: position.coords.latitude });
+      },
+      (err) => {
+        this.setState({ errorMessage: err.message });
+      }
+    );
+  }
+
+  // React says we have to define render!
+  render() {
+    if (this.state.errorMessage && !this.state.lat)
+      return <div>Error: {this.state.errorMessage}</div>;
+    if (!this.state.errorMessage && this.state.lat)
+      return <div>Latitude: {this.state.lat}</div>;
+    if (!this.state.errorMessage && !this.state.lat)
+      return <div>Loading...</div>;
   }
 }
 
