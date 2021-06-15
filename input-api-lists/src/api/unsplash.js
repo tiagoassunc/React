@@ -1,5 +1,6 @@
 import Axios from "axios";
 
+// Exporting api configs with Axios
 export default Axios.create({
   baseURL: "https://api.unsplash.com",
   headers: {
