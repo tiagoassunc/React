@@ -27,7 +27,7 @@ const Search = () => {
         if (term) {
           search();
         }
-      }, 500);
+      }, 300);
 
       // Cleanup func to stop timeout using term rerender
       return () => {
