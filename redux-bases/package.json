@@ -1,0 +1,14 @@
+{
+  "name": "redux-bases",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "liveserver": "^0.1.20"
+  }
+}
