@@ -1,34 +1,25 @@
 import React from "react";
-import { HashRouter, Route, Link } from "react-router-dom";
-
-const PageOne = () => {
-  return (
-    <div>
-      Page One
-      <Link href="/pagetwo">Navigate to Page Two</Link>
-    </div>
-  );
-};
-
-const PageTwo = () => {
-  return (
-    <div>
-      Page Two
-      <button>click me!</button>
-      <Link href="/">Navigate to Page one</Link>
-    </div>
-  );
-};
+import { BrowserRouter, Route } from "react-router-dom";
+import StreamList from "./streams/StreamList";
+import StreamCreate from "./streams/StreamCreate";
+import StreamEdit from "./streams/StreamEdit";
+import StreamDelete from "./streams/StreamDelete";
+import StreamShow from "./streams/StreamShow";
+import Header from "./Header";
 
 const App = () => {
   return (
-    <div>
-      <HashRouter>
+    <div className="ui container">
+      <BrowserRouter>
         <div>
-          <Route path="/" exact component={PageOne} />
-          <Route path="/pagetwo" component={PageTwo} />
+          <Header />
+          <Route path="/" exact component={StreamList} />
+          <Route path="/stream/new" exact component={StreamCreate} />
+          <Route path="/stream/edit" exact component={StreamEdit} />
+          <Route path="/stream/delete" exact component={StreamDelete} />
+          <Route path="/stream/show" exact component={StreamShow} />
         </div>
-      </HashRouter>
+      </BrowserRouter>
     </div>
   );
 };
