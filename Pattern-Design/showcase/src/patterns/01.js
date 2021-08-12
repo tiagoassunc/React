@@ -22,17 +22,72 @@ const withClapAnimation = (WrappedComponent) => {
     };
 
     componentDidMount() {
+      const tlDuration = 300;
       const scaleButton = new mojs.Html({
         el: "#clap",
-        duration: 300,
+        duration: tlDuration,
         scale: { 1.3: 1 }, // First scale and final
         easing: mojs.easing.ease.out,
       });
+      const countAnimation = new mojs.Html({
+        el: "#clapCount",
+        opacity: { 0: 1 },
+        y: { 0: -30 },
+        duration: tlDuration,
+      }).then({
+        opacity: { 1: 0 },
+        y: -80,
+        delay: tlDuration / 2,
+      });
+      const countTotalAnimation = new mojs.Html({
+        el: "#clapCountTotal",
+        opacity: { 0: 1 },
+        delay: (3 * tlDuration) / 2,
+        duration: tlDuration,
+        y: { 0: -3 },
+      });
+      const triangleBurst = new mojs.Burst({
+        parent: "#clap",
+        radius: { 50: 95 }, // How far
+        count: 5,
+        angle: 30,
+        children: {
+          shape: "polygon",
+          radius: { 6: 0 }, // size animation
+          stroke: "rgba(211,45,0,0.5)", // color
+          strokeWidth: 2, // size
+          angle: 210, // agle of particules
+          delay: 30,
+          speed: 0.2,
+          easing: mojs.easing.bezier(0.1, 1, 0.3, 1),
+          duration: tlDuration,
+        },
+      });
+      const circleBurst = new mojs.Burst({
+        parent: "#clap",
+        radius: { 50: 75 }, // How far
+        angle: 25,
+        duration: tlDuration,
+        children: {
+          shape: "circle",
+          fill: "rgba(149,165,166,0.5)",
+          delay: 30,
+          speed: 0.2,
+          radius: { 3: 0 }, // size animation
+          easing: mojs.easing.bezier(0.1, 1, 0.3, 1),
+        },
+      });
 
       const clap = document.getElementById("clap");
-      clap.style.transform = "scale(1,1)";
+      clap.style.transform = "scale(1,1)"; // Correcting size in init
 
-      const newAnimationTimeline = this.animationTimeline.add([scaleButton]);
+      const newAnimationTimeline = this.animationTimeline.add([
+        scaleButton,
+        countTotalAnimation,
+        countAnimation,
+        triangleBurst,
+        circleBurst,
+      ]);
       this.setState({ animationTimeline: newAnimationTimeline });
     }
 
@@ -98,11 +153,19 @@ const ClapIcon = ({ isClicked }) => {
 };
 
 const ClapCount = ({ count }) => {
-  return <span className={styles.count}>+ {count}</span>;
+  return (
+    <span id="clapCount" className={styles.count}>
+      + {count}
+    </span>
+  );
 };
 
 const ClapTotal = ({ countTotal }) => {
-  return <span className={styles.total}>{countTotal}</span>;
+  return (
+    <span id="clapCountTotal" className={styles.total}>
+      {countTotal}
+    </span>
+  );
 };
 
 /*
