@@ -13,7 +13,7 @@
     }
   },
   "lint-staged": {
-    "*.scss": "npm run lint:fix"
+    "*.scss": "yarn lint:fix"
   },
   "author": "",
   "license": "ISC",
