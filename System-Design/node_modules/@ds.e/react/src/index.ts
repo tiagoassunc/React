@@ -1,5 +1,3 @@
-import Button from './atoms/Button'
+import Color from "./atoms/color";
 
-export {
-  Button
-}
+export { Color };

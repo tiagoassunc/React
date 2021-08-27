@@ -1,16 +1,13 @@
-import Ts from 'rollup-plugin-typescript2'
+import Ts from "rollup-plugin-typescript2";
 
 export default {
-  input: [
-    'src/index.ts',
-    'src/atoms/Button/index.ts'
-  ],
+  input: ["src/index.ts", "src/atoms/Color/index.ts"],
   output: {
-    dir: 'lib',
-    format: 'esm',
-    sourcemap: true
+    dir: "lib",
+    format: "esm",
+    sourcemap: true,
   },
   plugins: [Ts()],
   preserveModules: true,
-  external: ['react']
-}
+  external: ["react"],
+};
