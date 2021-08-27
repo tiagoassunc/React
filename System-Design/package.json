@@ -17,8 +17,8 @@
     ]
   },
   "scripts": {
-    "build": "lerna run build",
-    "dev": "lerna run dev"
+    "build": "npx lerna run build",
+    "dev": "npx lerna run dev"
   },
   "dependencies": {
     "yarn": "^1.22.11"

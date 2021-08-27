@@ -5,7 +5,11 @@ interface ButtonProps {
 }
 
 const Button: React.FunctionComponent<ButtonProps> = ({ label }) => {
-  return <button className="dse-button-container">{label}</button>;
+  return (
+    <button className="dse-button-container">
+      {label || "Button"} - Label here
+    </button>
+  );
 };
 
 export default Button;
