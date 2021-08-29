@@ -1,7 +1,7 @@
 {
-  "name": "@ds.e/foudation",
+  "name": "@ds.e/foundation",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/index.js",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^4.4.2"

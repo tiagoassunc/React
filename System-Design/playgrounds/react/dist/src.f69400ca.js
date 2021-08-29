@@ -29566,7 +29566,25 @@ if ("development" === 'production') {
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
-},{"./cjs/react-dom.development.js":"../../../node_modules/react-dom/cjs/react-dom.development.js"}],"../../../node_modules/@ds.e/react/lib/foundation/Spacing.js":[function(require,module,exports) {
+},{"./cjs/react-dom.development.js":"../../../node_modules/react-dom/cjs/react-dom.development.js"}],"../../../node_modules/@ds.e/foundation/lib/FontSize.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+const fontSizes = {
+  xs: "xs",
+  sm: "sm",
+  base: "base",
+  lg: "lg",
+  xl: "xl"
+};
+
+var _default = Object.freeze(fontSizes);
+
+exports.default = _default;
+},{}],"../../../node_modules/@ds.e/foundation/lib/Spacing.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29574,6 +29592,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 const spaces = {
+  none: "none",
   xxxs: "xxxs",
   // 4px
   xxs: "xxs",
@@ -29590,12 +29609,37 @@ const spaces = {
   // 48px
   xxl: "xxl",
   // 72px
-  xxxl: "xxxl" // 96px
-
+  xxxl: "xxxl"
 };
-var Spacing = Object.freeze(spaces);
-exports.default = Spacing;
-},{}],"../../../node_modules/@ds.e/react/lib/atoms/color/Color2.js":[function(require,module,exports) {
+
+var _default = Object.freeze(spaces);
+
+exports.default = _default;
+},{}],"../../../node_modules/@ds.e/foundation/lib/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "FontSize", {
+  enumerable: true,
+  get: function () {
+    return _FontSize.default;
+  }
+});
+Object.defineProperty(exports, "Spacing", {
+  enumerable: true,
+  get: function () {
+    return _Spacing.default;
+  }
+});
+
+var _FontSize = _interopRequireDefault(require("./FontSize"));
+
+var _Spacing = _interopRequireDefault(require("./Spacing"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./FontSize":"../../../node_modules/@ds.e/foundation/lib/FontSize.js","./Spacing":"../../../node_modules/@ds.e/foundation/lib/Spacing.js"}],"../../../node_modules/@ds.e/react/lib/atoms/color/Color2.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29605,14 +29649,14 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _Spacing = _interopRequireDefault(require("../../foundation/Spacing.js"));
+var _foundation = require("@ds.e/foundation");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const Color = ({
   hexCode,
-  width = _Spacing.default.sm,
-  height = _Spacing.default.sm
+  width = _foundation.Spacing.sm,
+  height = _foundation.Spacing.sm
 }) => {
   const className = `dse-width-${width} dse-height-${height}`;
   return _react.default.createElement("div", {
@@ -29624,7 +29668,7 @@ const Color = ({
 };
 
 exports.default = Color;
-},{"react":"../../../node_modules/react/index.js","../../foundation/Spacing.js":"../../../node_modules/@ds.e/react/lib/foundation/Spacing.js"}],"../../../node_modules/@ds.e/react/lib/index.js":[function(require,module,exports) {
+},{"react":"../../../node_modules/react/index.js","@ds.e/foundation":"../../../node_modules/@ds.e/foundation/lib/index.js"}],"../../../node_modules/@ds.e/react/lib/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29636,19 +29680,11 @@ Object.defineProperty(exports, "Color", {
     return _Color.default;
   }
 });
-Object.defineProperty(exports, "Spacing", {
-  enumerable: true,
-  get: function () {
-    return _Spacing.default;
-  }
-});
 
 var _Color = _interopRequireDefault(require("./atoms/color/Color2.js"));
 
-var _Spacing = _interopRequireDefault(require("./foundation/Spacing.js"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./atoms/color/Color2.js":"../../../node_modules/@ds.e/react/lib/atoms/color/Color2.js","./foundation/Spacing.js":"../../../node_modules/@ds.e/react/lib/foundation/Spacing.js"}],"../../../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"./atoms/color/Color2.js":"../../../node_modules/@ds.e/react/lib/atoms/color/Color2.js"}],"../../../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
