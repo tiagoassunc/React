@@ -1,20 +1,29 @@
 import React, { useState, useRef, useEffect } from "react";
+import Text from "../../atoms/Text";
 
 interface SelectOption {
   label: string;
   value: string;
 }
 
+interface RenderOptionProps {
+  isSelected: boolean;
+  option: SelectOption;
+  getOptionRecommendedProps: (overrideProps?: Object) => Object;
+}
+
 interface SelectProps {
   onOptionSelected?: (option: SelectOption, optionIndex: number) => void;
   options?: SelectOption[];
   label?: string;
+  renderOption?: (props: RenderOptionProps) => React.ReactNode;
 }
 
 const Select: React.FunctionComponent<SelectProps> = ({
   options = [],
   label = "Please select an option...",
   onOptionSelected: handler,
+  renderOption,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
@@ -38,6 +47,11 @@ const Select: React.FunctionComponent<SelectProps> = ({
     setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
   }, [labelRef.current?.offsetHeight]);
 
+  let selectedOption = null;
+  if (selectedIndex !== null) {
+    selectedOption = options[selectedIndex];
+  }
+
   return (
     <div className="dse-select">
       <button
@@ -45,13 +59,15 @@ const Select: React.FunctionComponent<SelectProps> = ({
         className="dse-select__label"
         onClick={() => onLabelClick()}
       >
-        <span>{label}</span>
+        <Text>{selectedIndex === null ? label : selectedOption?.label}</Text>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="1rem"
           width="1rem"
           fill="currentColor"
-          className="h-5 w-5"
+          className={`dse-select__caret ${
+            isOpen ? "dse-select__caret--open" : "dse-select__caret--closed"
+          }`}
           viewBox="0 0 20 20"
         >
           <path
@@ -67,6 +83,25 @@ const Select: React.FunctionComponent<SelectProps> = ({
           {options.map((option, optionIndex) => {
             const isSelected = selectedIndex === optionIndex;
 
+            const renderOptionProps = {
+              option,
+              isSelected,
+              getOptionRecommendedProps: (overrideProps = {}) => {
+                return {
+                  className: `dse-select__option ${
+                    isSelected ? "dse-select__option--selected" : ""
+                  } `,
+                  key: option.value,
+                  onClick: () => onOptionSelected(option, optionIndex),
+                  ...overrideProps,
+                };
+              },
+            };
+
+            if (renderOption) {
+              return renderOption(renderOptionProps);
+            }
+
             return (
               <li
                 className={`dse-select__option ${
@@ -75,7 +110,25 @@ const Select: React.FunctionComponent<SelectProps> = ({
                 onClick={() => onOptionSelected(option, optionIndex)}
                 key={option.value}
               >
-                {option.label}
+                <Text>{option.label}</Text>
+
+                {isSelected ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    height="1rem"
+                    width="1rem"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                ) : null}
               </li>
             );
           })}
