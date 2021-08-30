@@ -1342,9 +1342,28 @@ body {
   border: 1px solid var(--dse-form-border-color, #f1f2f3);
   background-color: var(--dse-form-bg-color, #fff);
   z-index: 99;
+  list-style-type: none;
   box-shadow: 0px 4px 11px rgba(157, 157, 157, 0.21);
   position: absolute;
   width: 100%;
+}
+
+.dse-select__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  padding: 0.75rem;
+}
+
+.dse-select__option:hover {
+  background-color: var(--dse-form-bg-color-hover, #f1f2f3);
+}
+
+.dse-select__option--selected {
+  background-color: var(--dse-form-bg-option-selected, #5ece7b);
+  color: var(--dse-form-color-option-selected, #fff);
 }
 
 
