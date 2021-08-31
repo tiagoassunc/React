@@ -1,11 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, createRef } from 'react';
 import Text from '../../atoms/Text/Text.js';
 
+const KEY_CODES = {
+    ENTER: 13,
+    SPACE: 32,
+    DOWN_ARROW: 40,
+};
 const Select = ({ options = [], label = "Please select an option...", onOptionSelected: handler, renderOption, }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [highlightIndex, setHighlightIndex] = useState(null);
     const labelRef = useRef(null);
+    const [optionRefs, setOptionsRefs] = useState([]);
     const [overlayTop, setOverlayTop] = useState(0);
+    useEffect(() => {
+        setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
+    }, [labelRef.current?.offsetHeight]);
+    useEffect(() => {
+        setOptionsRefs(options.map((_) => createRef()));
+    }, [options.length]);
     const onOptionSelected = (option, optionIndex) => {
         if (handler) {
             handler(option, optionIndex);
@@ -16,26 +29,39 @@ const Select = ({ options = [], label = "Please select an option...", onOptionSe
     const onLabelClick = () => {
         setIsOpen(!isOpen);
     };
-    useEffect(() => {
-        setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
-    }, [labelRef.current?.offsetHeight]);
     let selectedOption = null;
     if (selectedIndex !== null) {
         selectedOption = options[selectedIndex];
     }
+    const highlightItem = (optionIndex) => {
+        setHighlightIndex(optionIndex);
+    };
+    const onButtonKeyDown = (event) => {
+        event.preventDefault();
+        if ([KEY_CODES.ENTER, KEY_CODES.SPACE, KEY_CODES.DOWN_ARROW].includes(event.keyCode)) {
+            setIsOpen(true);
+            // set focus on the list item
+            highlightItem(0);
+        }
+    };
     return (React.createElement("div", { className: "dse-select" },
-        React.createElement("button", { ref: labelRef, className: "dse-select__label", onClick: () => onLabelClick() },
+        React.createElement("button", { onKeyDown: onButtonKeyDown, "aria-controls": "dse-select-list", "aria-haspopup": true, "aria-expanded": isOpen ? true : false, ref: labelRef, className: "dse-select__label", onClick: () => onLabelClick() },
             React.createElement(Text, null, selectedIndex === null ? label : selectedOption?.label),
             React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "1rem", width: "1rem", fill: "currentColor", className: `dse-select__caret ${isOpen ? "dse-select__caret--open" : "dse-select__caret--closed"}`, viewBox: "0 0 20 20" },
                 React.createElement("path", { fillRule: "evenodd", d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", clipRule: "evenodd" }))),
-        isOpen ? (React.createElement("ul", { style: { top: overlayTop }, className: "dse-select__overlay" }, options.map((option, optionIndex) => {
+        isOpen ? (React.createElement("ul", { role: "menu", id: "dse-select-list", style: { top: overlayTop }, className: "dse-select__overlay" }, options.map((option, optionIndex) => {
             const isSelected = selectedIndex === optionIndex;
+            const isHighlighted = highlightIndex === optionIndex;
+            const ref = optionRefs[optionIndex];
             const renderOptionProps = {
+                ref,
+                onMouseEnter: () => highlightItem(optionIndex),
+                onMouseLeave: () => highlightItem(null),
                 option,
                 isSelected,
                 getOptionRecommendedProps: (overrideProps = {}) => {
                     return {
-                        className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} `,
+                        className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} ${isHighlighted ? "dse-select__option--highlighted" : ""}`,
                         key: option.value,
                         onClick: () => onOptionSelected(option, optionIndex),
                         ...overrideProps,
@@ -45,7 +71,7 @@ const Select = ({ options = [], label = "Please select an option...", onOptionSe
             if (renderOption) {
                 return renderOption(renderOptionProps);
             }
-            return (React.createElement("li", { className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} `, onClick: () => onOptionSelected(option, optionIndex), key: option.value },
+            return (React.createElement("li", { ...renderOptionProps.getOptionRecommendedProps() },
                 React.createElement(Text, null, option.label),
                 isSelected ? (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", height: "1rem", width: "1rem" },
                     React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M5 13l4 4L19 7" }))) : null));

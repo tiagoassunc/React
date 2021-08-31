@@ -1,5 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  KeyboardEventHandler,
+  createRef,
+} from "react";
 import Text from "../../atoms/Text";
+
+const KEY_CODES = {
+  ENTER: 13,
+  SPACE: 32,
+  DOWN_ARROW: 40,
+};
 
 interface SelectOption {
   label: string;
@@ -27,8 +39,20 @@ const Select: React.FunctionComponent<SelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<null | number>(null);
+  const [highlightIndex, setHighlightIndex] = useState<null | number>(null);
   const labelRef = useRef<HTMLButtonElement>(null);
+  const [optionRefs, setOptionsRefs] = useState<
+    React.RefObject<HTMLLIElement>[]
+  >([]);
   const [overlayTop, setOverlayTop] = useState<number>(0);
+
+  useEffect(() => {
+    setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
+  }, [labelRef.current?.offsetHeight]);
+
+  useEffect(() => {
+    setOptionsRefs(options.map((_) => createRef<HTMLLIElement>()));
+  }, [options.length]);
 
   const onOptionSelected = (option: SelectOption, optionIndex: number) => {
     if (handler) {
@@ -43,18 +67,37 @@ const Select: React.FunctionComponent<SelectProps> = ({
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
-  }, [labelRef.current?.offsetHeight]);
-
   let selectedOption = null;
   if (selectedIndex !== null) {
     selectedOption = options[selectedIndex];
   }
 
+  const highlightItem = (optionIndex: number | null) => {
+    setHighlightIndex(optionIndex);
+  };
+
+  const onButtonKeyDown: KeyboardEventHandler = (event) => {
+    event.preventDefault();
+
+    if (
+      [KEY_CODES.ENTER, KEY_CODES.SPACE, KEY_CODES.DOWN_ARROW].includes(
+        event.keyCode
+      )
+    ) {
+      setIsOpen(true);
+
+      // set focus on the list item
+      highlightItem(0);
+    }
+  };
+
   return (
     <div className="dse-select">
       <button
+        onKeyDown={onButtonKeyDown}
+        aria-controls="dse-select-list"
+        aria-haspopup={true}
+        aria-expanded={isOpen ? true : false}
         ref={labelRef}
         className="dse-select__label"
         onClick={() => onLabelClick()}
@@ -79,18 +122,29 @@ const Select: React.FunctionComponent<SelectProps> = ({
       </button>
 
       {isOpen ? (
-        <ul style={{ top: overlayTop }} className="dse-select__overlay">
+        <ul
+          role="menu"
+          id="dse-select-list"
+          style={{ top: overlayTop }}
+          className="dse-select__overlay"
+        >
           {options.map((option, optionIndex) => {
             const isSelected = selectedIndex === optionIndex;
+            const isHighlighted = highlightIndex === optionIndex;
+
+            const ref = optionRefs[optionIndex];
 
             const renderOptionProps = {
+              ref,
+              onMouseEnter: () => highlightItem(optionIndex),
+              onMouseLeave: () => highlightItem(null),
               option,
               isSelected,
               getOptionRecommendedProps: (overrideProps = {}) => {
                 return {
                   className: `dse-select__option ${
                     isSelected ? "dse-select__option--selected" : ""
-                  } `,
+                  } ${isHighlighted ? "dse-select__option--highlighted" : ""}`,
                   key: option.value,
                   onClick: () => onOptionSelected(option, optionIndex),
                   ...overrideProps,
@@ -103,13 +157,7 @@ const Select: React.FunctionComponent<SelectProps> = ({
             }
 
             return (
-              <li
-                className={`dse-select__option ${
-                  isSelected ? "dse-select__option--selected" : ""
-                } `}
-                onClick={() => onOptionSelected(option, optionIndex)}
-                key={option.value}
-              >
+              <li {...renderOptionProps.getOptionRecommendedProps()}>
                 <Text>{option.label}</Text>
 
                 {isSelected ? (

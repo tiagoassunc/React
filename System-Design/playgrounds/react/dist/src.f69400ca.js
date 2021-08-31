@@ -29759,6 +29759,12 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+const KEY_CODES = {
+  ENTER: 13,
+  SPACE: 32,
+  DOWN_ARROW: 40
+};
+
 const Select = ({
   options = [],
   label = "Please select an option...",
@@ -29767,8 +29773,16 @@ const Select = ({
 }) => {
   const [isOpen, setIsOpen] = (0, _react.useState)(false);
   const [selectedIndex, setSelectedIndex] = (0, _react.useState)(null);
+  const [highlightIndex, setHighlightIndex] = (0, _react.useState)(null);
   const labelRef = (0, _react.useRef)(null);
+  const [optionRefs, setOptionsRefs] = (0, _react.useState)([]);
   const [overlayTop, setOverlayTop] = (0, _react.useState)(0);
+  (0, _react.useEffect)(() => {
+    setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
+  }, [labelRef.current?.offsetHeight]);
+  (0, _react.useEffect)(() => {
+    setOptionsRefs(options.map(_ => (0, _react.createRef)()));
+  }, [options.length]);
 
   const onOptionSelected = (option, optionIndex) => {
     if (handler) {
@@ -29783,18 +29797,33 @@ const Select = ({
     setIsOpen(!isOpen);
   };
 
-  (0, _react.useEffect)(() => {
-    setOverlayTop((labelRef.current?.offsetHeight || 0) + 10);
-  }, [labelRef.current?.offsetHeight]);
   let selectedOption = null;
 
   if (selectedIndex !== null) {
     selectedOption = options[selectedIndex];
   }
 
+  const highlightItem = optionIndex => {
+    setHighlightIndex(optionIndex);
+  };
+
+  const onButtonKeyDown = event => {
+    event.preventDefault();
+
+    if ([KEY_CODES.ENTER, KEY_CODES.SPACE, KEY_CODES.DOWN_ARROW].includes(event.keyCode)) {
+      setIsOpen(true); // set focus on the list item
+
+      highlightItem(0);
+    }
+  };
+
   return _react.default.createElement("div", {
     className: "dse-select"
   }, _react.default.createElement("button", {
+    onKeyDown: onButtonKeyDown,
+    "aria-controls": "dse-select-list",
+    "aria-haspopup": true,
+    "aria-expanded": isOpen ? true : false,
     ref: labelRef,
     className: "dse-select__label",
     onClick: () => onLabelClick()
@@ -29810,18 +29839,25 @@ const Select = ({
     d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
     clipRule: "evenodd"
   }))), isOpen ? _react.default.createElement("ul", {
+    role: "menu",
+    id: "dse-select-list",
     style: {
       top: overlayTop
     },
     className: "dse-select__overlay"
   }, options.map((option, optionIndex) => {
     const isSelected = selectedIndex === optionIndex;
+    const isHighlighted = highlightIndex === optionIndex;
+    const ref = optionRefs[optionIndex];
     const renderOptionProps = {
+      ref,
+      onMouseEnter: () => highlightItem(optionIndex),
+      onMouseLeave: () => highlightItem(null),
       option,
       isSelected,
       getOptionRecommendedProps: (overrideProps = {}) => {
         return {
-          className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} `,
+          className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} ${isHighlighted ? "dse-select__option--highlighted" : ""}`,
           key: option.value,
           onClick: () => onOptionSelected(option, optionIndex),
           ...overrideProps
@@ -29833,10 +29869,7 @@ const Select = ({
       return renderOption(renderOptionProps);
     }
 
-    return _react.default.createElement("li", {
-      className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} `,
-      onClick: () => onOptionSelected(option, optionIndex),
-      key: option.value
+    return _react.default.createElement("li", { ...renderOptionProps.getOptionRecommendedProps()
     }, _react.default.createElement(_Text.default, null, option.label), isSelected ? _react.default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       fill: "none",
@@ -30058,7 +30091,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61517" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51190" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
