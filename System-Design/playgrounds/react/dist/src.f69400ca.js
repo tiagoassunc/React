@@ -29762,7 +29762,33 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 const KEY_CODES = {
   ENTER: 13,
   SPACE: 32,
-  DOWN_ARROW: 40
+  UP_ARROW: 38,
+  DOWN_ARROW: 40,
+  ESC: 27
+};
+
+const getPreviousOptionIndex = (currentIndex, options) => {
+  if (currentIndex === null) {
+    return 0;
+  }
+
+  if (currentIndex === 0) {
+    return options.length - 1;
+  }
+
+  return currentIndex - 1;
+};
+
+const getNextOptionIndex = (currentIndex, options) => {
+  if (currentIndex === null) {
+    return 0;
+  }
+
+  if (currentIndex === options.length - 1) {
+    return 0;
+  }
+
+  return currentIndex + 1;
 };
 
 const Select = ({
@@ -29773,7 +29799,7 @@ const Select = ({
 }) => {
   const [isOpen, setIsOpen] = (0, _react.useState)(false);
   const [selectedIndex, setSelectedIndex] = (0, _react.useState)(null);
-  const [highlightIndex, setHighlightIndex] = (0, _react.useState)(null);
+  const [highlightedIndex, setHighlightedIndex] = (0, _react.useState)(null);
   const labelRef = (0, _react.useRef)(null);
   const [optionRefs, setOptionsRefs] = (0, _react.useState)([]);
   const [overlayTop, setOverlayTop] = (0, _react.useState)(0);
@@ -29803,8 +29829,8 @@ const Select = ({
     selectedOption = options[selectedIndex];
   }
 
-  const highlightItem = optionIndex => {
-    setHighlightIndex(optionIndex);
+  const highlightOption = optionIndex => {
+    setHighlightedIndex(optionIndex);
   };
 
   const onButtonKeyDown = event => {
@@ -29813,7 +29839,36 @@ const Select = ({
     if ([KEY_CODES.ENTER, KEY_CODES.SPACE, KEY_CODES.DOWN_ARROW].includes(event.keyCode)) {
       setIsOpen(true); // set focus on the list item
 
-      highlightItem(0);
+      highlightOption(0);
+    }
+  };
+
+  (0, _react.useEffect)(() => {
+    if (highlightedIndex !== null && isOpen) {
+      const ref = optionRefs[highlightedIndex];
+
+      if (ref && ref.current) {
+        ref.current.focus();
+      }
+    }
+  }, [isOpen, highlightedIndex]);
+
+  const onOptionKeyDown = event => {
+    if (event.keyCode === KEY_CODES.ESC) {
+      setIsOpen(false);
+      return;
+    }
+
+    if (event.keyCode === KEY_CODES.DOWN_ARROW) {
+      highlightOption(getNextOptionIndex(highlightedIndex, options));
+    }
+
+    if (event.keyCode === KEY_CODES.UP_ARROW) {
+      highlightOption(getPreviousOptionIndex(highlightedIndex, options));
+    }
+
+    if (event.keyCode === KEY_CODES.ENTER) {
+      onOptionSelected(options[highlightedIndex], highlightedIndex);
     }
   };
 
@@ -29847,16 +29902,22 @@ const Select = ({
     className: "dse-select__overlay"
   }, options.map((option, optionIndex) => {
     const isSelected = selectedIndex === optionIndex;
-    const isHighlighted = highlightIndex === optionIndex;
+    const isHighlighted = highlightedIndex === optionIndex;
     const ref = optionRefs[optionIndex];
     const renderOptionProps = {
       ref,
-      onMouseEnter: () => highlightItem(optionIndex),
-      onMouseLeave: () => highlightItem(null),
       option,
       isSelected,
       getOptionRecommendedProps: (overrideProps = {}) => {
         return {
+          ref,
+          role: "menuitemradio",
+          "aria-label": option.label,
+          "aria-checked": isSelected ? true : undefined,
+          onKeyDown: onOptionKeyDown,
+          tabIndex: isHighlighted ? -1 : 0,
+          onMouseEnter: () => highlightOption(optionIndex),
+          onMouseLeave: () => highlightOption(null),
           className: `dse-select__option ${isSelected ? "dse-select__option--selected" : ""} ${isHighlighted ? "dse-select__option--highlighted" : ""}`,
           key: option.value,
           onClick: () => onOptionSelected(option, optionIndex),
@@ -30091,7 +30152,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51190" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60722" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
