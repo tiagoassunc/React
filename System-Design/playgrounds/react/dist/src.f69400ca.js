@@ -29875,6 +29875,7 @@ const Select = ({
   return _react.default.createElement("div", {
     className: "dse-select"
   }, _react.default.createElement("button", {
+    "data-testid": "DseSelectButton",
     onKeyDown: onButtonKeyDown,
     "aria-controls": "dse-select-list",
     "aria-haspopup": true,

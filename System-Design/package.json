@@ -18,7 +18,8 @@
   },
   "scripts": {
     "build": "npx lerna run build",
-    "dev": "npx lerna run dev"
+    "dev": "npx lerna run dev",
+    "test": "npx lerna run test"
   },
   "dependencies": {
     "yarn": "^1.22.11"

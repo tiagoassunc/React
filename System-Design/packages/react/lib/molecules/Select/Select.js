@@ -88,7 +88,7 @@ const Select = ({ options = [], label = "Please select an option...", onOptionSe
         }
     };
     return (React.createElement("div", { className: "dse-select" },
-        React.createElement("button", { onKeyDown: onButtonKeyDown, "aria-controls": "dse-select-list", "aria-haspopup": true, "aria-expanded": isOpen ? true : false, ref: labelRef, className: "dse-select__label", onClick: () => onLabelClick() },
+        React.createElement("button", { "data-testid": "DseSelectButton", onKeyDown: onButtonKeyDown, "aria-controls": "dse-select-list", "aria-haspopup": true, "aria-expanded": isOpen ? true : false, ref: labelRef, className: "dse-select__label", onClick: () => onLabelClick() },
             React.createElement(Text, null, selectedIndex === null ? label : selectedOption?.label),
             React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "1rem", width: "1rem", fill: "currentColor", className: `dse-select__caret ${isOpen ? "dse-select__caret--open" : "dse-select__caret--closed"}`, viewBox: "0 0 20 20" },
                 React.createElement("path", { fillRule: "evenodd", d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z", clipRule: "evenodd" }))),

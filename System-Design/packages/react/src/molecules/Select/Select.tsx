@@ -152,6 +152,7 @@ const Select: React.FunctionComponent<SelectProps> = ({
   return (
     <div className="dse-select">
       <button
+        data-testid="DseSelectButton"
         onKeyDown={onButtonKeyDown}
         aria-controls="dse-select-list"
         aria-haspopup={true}
