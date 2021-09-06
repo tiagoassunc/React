@@ -19,7 +19,7 @@ const options = [
 ];
 
 export default {
-  title: "Select",
+  title: "Molecules/Select",
 };
 
 export const Common = () => <Select options={options} />;
@@ -33,4 +33,8 @@ export const RenderOption = () => (
       </span>
     )}
   />
+);
+
+export const customLabel = () => (
+  <Select label="Select a color" options={options} />
 );
