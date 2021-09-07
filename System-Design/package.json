@@ -19,7 +19,8 @@
   "scripts": {
     "build": "npx lerna run build",
     "dev": "npx lerna run dev",
-    "test": "npx lerna run test"
+    "test": "npx lerna run test",
+    "publish": "test && build && lerna publish"
   },
   "dependencies": {
     "yarn": "^1.22.11"
