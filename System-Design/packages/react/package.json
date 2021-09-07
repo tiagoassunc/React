@@ -35,5 +35,8 @@
     "@types/jest": "^27.0.1",
     "jest": "^25.1.0",
     "jest-cli": "^26.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
