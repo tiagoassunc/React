@@ -1,5 +1,4 @@
 import React from "react";
-
 import Select from "./Select";
 import "@ds.e/scss/lib/Select.css";
 
