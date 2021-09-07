@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "lint": "stylelint ./**/*.scss",
     "lint:fix": "npm run lint --fix",
@@ -35,5 +39,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "c782da63ed15e5181e42a980824471b16667b659"
 }
