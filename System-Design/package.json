@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
     "lerna": "^4.0.0"
   },
   "private": true,
@@ -20,7 +22,13 @@
     "build": "npx lerna run build",
     "dev": "npx lerna run dev",
     "test": "npx lerna run test",
-    "repo-publish": "npx lerna run test && npx lerna run build && npx lerna publish"
+    "repo-publish": "npx lerna run test && npx lerna run build && npx lerna publish",
+    "commit": "git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "yarn": "^1.22.11"
