@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/tiagoassunc/React.js/compare/v0.1.3...v0.1.4) (2021-09-08)
+
+
+### Bug Fixes
+
+* **ci.yml:** ci.yml fix ([7024cab](https://github.com/tiagoassunc/React.js/commit/7024cabf36f9e0d64f5f6f3241e250d14638b3b9))
+
+
+
+
+
 ## [0.1.3](https://github.com/tiagoassunc/React.js/compare/v0.1.2...v0.1.3) (2021-09-08)
 
 
