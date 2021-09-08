@@ -12,8 +12,8 @@ interface MarginProps {
 const Margin: React.FC<MarginProps> = ({
   space = "xxxs",
   children,
-  left,
   right,
+  left,
   top,
   bottom,
 }) => {
