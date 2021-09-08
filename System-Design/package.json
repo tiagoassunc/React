@@ -20,7 +20,7 @@
     "build": "npx lerna run build",
     "dev": "npx lerna run dev",
     "test": "npx lerna run test",
-    "repo-publish": "npx lerna run test && npx lerna run build && lerna run publish"
+    "repo-publish": "npx lerna run test && npx lerna run build && npx lerna publish"
   },
   "dependencies": {
     "yarn": "^1.22.11"
