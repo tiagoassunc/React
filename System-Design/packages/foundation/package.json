@@ -1,5 +1,5 @@
 {
-  "name": "@ds.e/foundation",
+  "name": "@ds.study/foundation",
   "version": "0.1.4",
   "main": "lib/index.js",
   "license": "MIT",
@@ -19,7 +19,8 @@
     "test": "jest --verbose"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://www.npmjs.com/org/ds.study"
   },
-  "gitHead": "8920fe004e12b900ad1dd7a3f2dd5e6e3dbe231e"
+  "gitHead": "3f421ef13ea55ad6fc04df8130b7da5e0ae824ae"
 }
