@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import mojs from "mo-js";
 import styles from "./index.css";
 
@@ -101,7 +101,7 @@ const MediumClap = () => {
   const { count, countTotal, isClicked } = clapState;
 
   const [{ clapRef, clapCountRef, clapTotalRef, setRefState }] = useState({});
-  const setRef = useCallBack((node) => {
+  const setRef = useCallback((node) => {
     // save the node
     setRefState((prevRefState) => ({
       ...prevRefState,
