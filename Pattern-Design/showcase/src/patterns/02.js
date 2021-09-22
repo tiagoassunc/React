@@ -114,7 +114,7 @@ const useClapAnimation = ({
   ==================================== **/
 const initialState = {
   count: 0,
-  countTotal: generateRandomNumber(500, 10000),
+  countTotal: generateRandomNumber(50, 100),
   isClicked: false,
 };
 

@@ -5,6 +5,8 @@ import React, {
   createContext,
   useMemo,
   useContext,
+  useEffect,
+  useRef,
 } from "react";
 
 import mojs from "mo-js";
@@ -121,17 +123,17 @@ const useClapAnimation = ({
   ==================================== **/
 const initialState = {
   count: 0,
-  countTotal: 0,
+  countTotal: generateRandomNumber(50, 100),
   isClicked: false,
 };
 
 const MediumClapContext = createContext();
 const { Provider } = MediumClapContext;
 
-const MediumClap = ({ children }) => {
+const MediumClap = ({ children, onClap }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [clapState, setClapState] = useState(initialState);
-  const { count } = clapState;
+  const { count, countTotal } = clapState;
 
   const [{ clapRef, clapCountRef, clapTotalRef }, setRefState] = useState({});
 
@@ -150,6 +152,15 @@ const MediumClap = ({ children }) => {
     fadeEl: clapTotalRef,
     burstEl: clapRef,
   });
+
+  const componetnJustMounted = useRef(true);
+  useEffect(() => {
+    if (!componetnJustMounted.current) {
+      console.log("onClap called");
+      onClap && onClap(clapState);
+    }
+    componetnJustMounted.current = false;
+  }, [count]);
 
   const handleClapClick = () => {
     animationTimeline.replay();
@@ -227,13 +238,28 @@ const CountTotal = () => {
       may consume the component API
   ==================================== **/
 
+// import MediumClap from 'medium-clap'
+MediumClap.Icon = ClapIcon;
+MediumClap.Count = ClapCount;
+MediumClap.Total = CountTotal;
+
 const Usage = () => {
+  const [count, setCount] = useState(0);
+  const handleClap = (clapState) => {
+    setCount(clapState.count);
+  };
+
   return (
-    <MediumClap>
-      <ClapIcon />
-      <ClapCount />
-      <CountTotal />
-    </MediumClap>
+    <div style={{ width: "100%" }}>
+      <MediumClap onClap={handleClap}>
+        <MediumClap.Icon />
+        <MediumClap.Count />
+        <MediumClap.Total />
+      </MediumClap>
+      {!!count && (
+        <div className={styles.info}>{`You have clicked ${count} times`}</div>
+      )}
+    </div>
   );
 };
 
