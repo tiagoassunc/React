@@ -159,13 +159,13 @@ const MediumClap = ({
     burstEl: clapRef,
   });
 
-  const componetnJustMounted = useRef(true);
+  const componentJustMounted = useRef(true);
   useEffect(() => {
-    if (!componetnJustMounted.current) {
+    if (!componentJustMounted.current) {
       console.log("onClap called");
       onClap && onClap(clapState);
     }
-    componetnJustMounted.current = false;
+    componentJustMounted.current = false;
   }, [count]);
 
   const handleClapClick = () => {
