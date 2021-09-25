@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useLayoutEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useEffect,
+} from "react";
 
 import mojs from "mo-js";
 import { generateRandomNumber } from "../utils/generateRandomNumber";
@@ -158,6 +164,22 @@ const useClapState = (initialState = INITIAL_STATE) => {
 };
 
 /** ====================================
+   *          🔰Hook
+    Custom Hook for useEffectAfterMount
+  ==================================== **/
+
+const useEffectAfterMount = (cb, deps) => {
+  const componentJustMounted = useRef(true);
+  useEffect(() => {
+    if (!componentJustMounted.current) {
+      return cb();
+    }
+    componentJustMounted.current = false;
+    // eslint-disable-next line react-hooks/exhasutive-deps
+  }, deps);
+};
+
+/** ====================================
    *      🔰 MediumClap
   ==================================== **/
 
@@ -173,17 +195,16 @@ const MediumClap = () => {
     burstEl: clapRef,
   });
 
-  const handleClapClick = () => {
+  useEffectAfterMount(() => {
     animationTimeline.replay();
-    updateClapState();
-  };
+  }, [count]);
 
   return (
     <button
       ref={setRef}
       data-refkey="clapRef"
       className={styles.clap}
-      onClick={handleClapClick}
+      onClick={updateClapState}
     >
       <ClapIcon isClicked={isClicked} />
       <ClapCount count={count} setRef={setRef} />
