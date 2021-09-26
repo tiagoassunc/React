@@ -184,14 +184,18 @@ const internalReducer = ({ count, countTotal }, { type, payload }) => {
       break;
   }
 };
+
 const useClapState = (
   initialState = INITIAL_STATE,
   reducer = internalReducer
 ) => {
   const userInitialStateRef = useRef(initialState);
 
-  const [clapState, dispatch] = useReducer(reducer, initialState);
-  const { count, countTotal } = clapState;
+  const [clapState, dispatch] = useReducer(
+    reducer,
+    userInitialStateRef.current
+  );
+  const { count } = clapState;
 
   const updateClapState = () => dispatch({ type: "clap" });
 
@@ -201,7 +205,7 @@ const useClapState = (
   const reset = useCallback(() => {
     if (prevCount !== count) {
       dispatch({ type: "reset", payload: userInitialStateRef.current });
-      resetRef.current++;
+      ++resetRef.current;
     }
   }, [prevCount, count]);
 
@@ -230,6 +234,9 @@ const useClapState = (
     resetDep: resetRef.current,
   };
 };
+
+useClapState.reducer = internalReducer;
+useClapState.types = { clap: "clap", reset: "reset" };
 
 /** ====================================
    *          🔰Hook
@@ -308,21 +315,14 @@ const userInitialState = {
 };
 
 const Usage = () => {
-  const reducer = ({ count, countTotal }, { type, payload }) => {
-    switch (type) {
-      case "clap":
-        return {
-          isClicked: true,
-          count: Math.min(count + 1, 10),
-          countTotal: count < 10 ? countTotal + 1 : countTotal,
-        };
+  const [timesClapped, setTimeClapped] = useState(0);
+  const isClappedToMuch = timesClapped >= 7;
 
-      case "reset":
-        return payload;
-
-      default:
-        break;
+  const reducer = (state, action) => {
+    if (action.type === useClapState.types.clap && isClappedToMuch) {
+      return state;
     }
+    return useClapState.reducer(state, action);
   };
 
   const { clapState, getTogglerProps, getCounterProps, reset, resetDep } =
@@ -344,6 +344,7 @@ const Usage = () => {
   const [uploadingReset, setUploadingReset] = useState(false);
   useEffectAfterMount(() => {
     setUploadingReset(true);
+    setTimeClapped(0);
 
     const id = setTimeout(() => {
       setUploadingReset(false);
@@ -353,6 +354,7 @@ const Usage = () => {
   }, [resetDep]);
 
   const handleClick = () => {
+    setTimeClapped((t) => t + 1);
     console.log("CLICKED !!!");
   };
 
@@ -380,10 +382,13 @@ const Usage = () => {
           reset
         </button>
         <pre className={userStyles.resetMsg}>
-          {JSON.stringify({ count, countTotal, isClicked })}
+          {JSON.stringify({ timesClapped, count, countTotal })}
         </pre>
         <pre className={userStyles.resetMsg}>
           {uploadingReset ? `uploading reset ${resetDep} ...` : ""}
+        </pre>
+        <pre style={{ color: "red" }}>
+          {isClappedToMuch ? `You have clapped to much` : ""}
         </pre>
       </section>
     </>
